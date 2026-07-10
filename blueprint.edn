@@ -1,0 +1,11 @@
+{:itonami.blueprint/id "cloud-itonami-7729"
+ :itonami.blueprint/name "Community Household Goods Rental Operations"
+ :itonami.blueprint/isic-rev5 "7729"
+ :itonami.blueprint/domain :commercial/household-goods-rental-services
+ :itonami.blueprint/license "AGPL-3.0-or-later"
+ :itonami.blueprint/social-impact [:consumer-protection :shared-asset-access :financial-inclusion]
+ :itonami.blueprint/governor :household-rental-governor
+ :itonami.blueprint/robotics true
+ :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger :labor]
+ :itonami.blueprint/optional-technologies [:optimization]
+ :itonami.blueprint/status :public-oss}
