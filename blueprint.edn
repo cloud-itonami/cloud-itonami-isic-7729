@@ -8,4 +8,57 @@
  :itonami.blueprint/robotics true
  :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger :labor]
  :itonami.blueprint/optional-technologies [:optimization]
- :itonami.blueprint/status :public-oss}
+ :itonami.blueprint/status :public-oss
+ :itonami.blueprint/maturity :implemented
+ :itonami.blueprint/implemented-slice
+ "HHGoodsRentalOpsAdvisor ⊣ HHGoodsRentalGovernor
+ (`hgrentalops.governor`), langgraph-clj StateGraph
+ (langgraph.graph, hgrentalops.operation/build), append-only audit
+ ledger (hgrentalops.store/ledger + append-ledger!, MemStore).
+ A genuinely compiled StateGraph (:intake -> :advise -> :govern ->
+ :decide -+-> :commit / :request-approval -> :commit / :hold) with
+ interrupt-before #{:request-approval} + in-memory checkpointer for
+ real human-in-the-loop resume. A back-office OPERATIONS COORDINATION
+ actor for the household-goods rental fleet (furniture/appliances/
+ party-event equipment): rental-record logging (checkout/return/
+ inspection-note), fleet-operation/delivery scheduling, fleet
+ restock/replacement coordination, and equipment-safety-concern
+ flagging (ALWAYS escalates, never auto-commits at any phase --
+ ADR-2607152500 person-facing-service safety guardrail). Three HARD
+ governor invariants (asset-unverified, effect-not-propose,
+ scope-excluded -- the last folding both the closed 4-op allowlist and
+ a content-scan block on directly finalizing/overriding an
+ equipment-safety-clearance decision into one check) plus a
+ high-cost-threshold escalation on :coordinate-fleet-restock. 49 tests
+ / 160 assertions green (clojure -M:dev:test, including
+ governor_contract_test.clj's real compiled-graph commit/hard-hold/
+ escalate-approve/escalate-reject coverage), clj-kondo 0 errors/0
+ warnings, demo runnable end-to-end (clojure -M:dev:run). A nightly
+ docs/samples/operator-console.html regenerator
+ (.github/workflows/regenerate.yml, hgrentalops.render-html) was
+ already present; this fix adds the missing push/PR lint+test gate
+ (.github/workflows/ci.yml, sibling-checkout pattern for :dev
+ :override-deps, mirrors cloud-itonami-isic-0115/-869/-7710) and sets
+ this maturity key.
+
+ KNOWN SCOPE GAP (flagged for a follow-up, not silently closed): this
+ repo's own pre-existing docs/business-model.md Trust Controls and
+ docs/operator-guide.md Minimum Production Controls name three
+ specific hard requirements this landed implementation does not yet
+ independently verify as governor checks -- (1) 'agreements cannot be
+ released outside verified disclosure scope' (no
+ rental-purchase-agreement/disclosure-scope concept or
+ :release-rental-agreement-shaped op exists; :log-rental-record's
+ free-form :patch could carry TCO-disclosure data but the governor
+ does not require or verify it), (2) 'a delivery/pickup without a
+ completed condition check' (no independently-verified
+ condition-check-completed? gate on :schedule-fleet-operation), (3)
+ 'reconciliation records require verified evidence' (no reconciliation
+ op or evidence-presence check exists). The landed governor instead
+ uses a generic equipment-safety-concern framing (defect/damage/
+ electrical-hazard) that is a real and legitimate concern but is not
+ the same invariant. Extending hgrentalops.governor with these three
+ checks (or documenting a deliberate decision not to) is open
+ follow-up work, intentionally not done unilaterally on top of another
+ session's just-landed, ADR-referenced (ADR-2607152500) design in this
+ same fix."}
