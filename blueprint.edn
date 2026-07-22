@@ -8,4 +8,58 @@
  :itonami.blueprint/robotics true
  :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger :labor]
  :itonami.blueprint/optional-technologies [:optimization]
- :itonami.blueprint/status :public-oss}
+ :itonami.blueprint/status :public-oss
+ :itonami.blueprint/maturity :implemented
+ :itonami.blueprint/implemented-slice
+ "HouseholdRentalAdvisor ⊣ Household Rental Governor, langgraph-clj
+ StateGraph (langgraph.graph, householdrentalops.operation/build),
+ append-only audit ledger (householdrentalops.store/ledger +
+ append-ledger!, MemStore and a DatomicStore backed by langchain.db via
+ langchain-store.core). A genuinely compiled StateGraph (`:intake ->
+ :advise -> :govern -> :decide -+-> :commit / :request-approval ->
+ :commit / :hold`) with `interrupt-before #{:request-approval}` +
+ in-memory checkpointer for real human-in-the-loop resume. A
+ back-office OPERATIONS COORDINATION actor for community household-
+ goods rent-to-own (furniture/appliances/consumer-electronics) -- not
+ direct disclosure-scope compliance-verification authority and not
+ condition-check override/waiver authority (both permanently blocked
+ ops, human/compliance-officer exclusive). Five ops
+ (`:release-rental-agreement` / `:dispatch-delivery-inspection-mission`
+ / `:dispatch-pickup-inspection-mission` / `:log-reconciliation-record`
+ / `:flag-disclosure-concern`), all `:effect :propose` only. Seven HARD
+ invariants elaborate this blueprint's Governor, all traceable to this
+ repo's own pre-existing README.md/docs (never a newly-fabricated
+ regulatory claim): disclosure-scope-unverified (applies to every op --
+ 'agreements cannot be released outside verified disclosure scope'),
+ no-execution, decision-authority-blocked (disclosure-scope-
+ verification finalization / condition-check override), op-not-allowed,
+ tco-disclosure-missing (`:release-rental-agreement` without a confirmed
+ `:tco-disclosed?` -- 'total-cost-of-ownership-disclosure management'),
+ condition-check-incomplete (delivery/pickup mission without a completed
+ `:condition-check-completed?` -- 'a delivery/pickup without a completed
+ condition check'), and reconciliation-evidence-missing
+ (`:log-reconciliation-record` without non-empty `:evidence` --
+ 'reconciliation records require verified evidence'), all quoting this
+ repo's own docs/business-model.md Trust Controls and docs/operator-
+ guide.md Minimum Production Controls verbatim rather than citing a new
+ external standard. `:flag-disclosure-concern` ALWAYS escalates to a
+ human compliance officer via the compiled graph's `:request-approval`
+ node (`interrupt-before`, checkpoint-based resume, proven by
+ `test/householdrentalops/operation_test.cljc` exercising commit /
+ hard-hold (unverified scope) / hard-hold (incomplete condition check) /
+ escalate-approve / escalate-reject / phase-0-forces-escalation /
+ reconciliation-record commit and hard-hold through the REAL compiled
+ graph end to end, plus a `clojure -M:dev:run` demo runner producing
+ real ledger entries for five scenarios). MemStore and DatomicStore pass
+ the same store-contract test
+ (`test/householdrentalops/store_contract_test.cljc`). 42 tests / 150
+ assertions green (`clojure -M:dev:test`), clj-kondo 0 errors/0
+ warnings, demo runnable end-to-end against both Store backends
+ (`clojure -M:dev:run`). Governance-doc set and `docs/` were already
+ present (README.md/business-model.md/operator-guide.md fully specify
+ the rental-purchase-agreement/disclosure-scope, TCO-disclosure,
+ robotics delivery/pickup condition-inspection and reconciliation-
+ record scope this implementation covers); `src/`, `test/`, `deps.edn`
+ and CI (`.github/workflows/ci.yml`, sibling-checkout pattern for
+ :local/root deps, mirrors cloud-itonami-isic-0115/cloud-itonami-isic-869)
+ were the gaps this fix closes."}
