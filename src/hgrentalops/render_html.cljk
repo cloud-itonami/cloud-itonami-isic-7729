@@ -6,7 +6,7 @@
   no generator at all. This namespace drives the REAL actor stack
   (`hgrentalops.operation` -> `hgrentalops.governor` -> `hgrentalops.store`)
   through a scenario adapted from this repo's own `hgrentalops.sim` demo
-  driver (`clojure -M:dev:run`, confirmed to run correctly against the
+  driver (`kbb -M:dev:run`, confirmed to run correctly against the
   real seeded household-goods rental fleet directory before this file
   was written -- unlike `cloud-itonami-isic-851`'s `schoolops.sim`, this
   repo's own sim driver uses ids that DO match `hgrentalops.store/demo-data`
@@ -25,7 +25,7 @@
   overrides an equipment-safety-authority decision (ADR-2607152500); no
   such op exists in `hgrentalops.governor/allowed-ops` to invoke here.
 
-  Usage: `clojure -M:dev:render-html [out-file]`
+  Usage: `kbb -M:dev:render-html [out-file]`
   (default `docs/samples/operator-console.html`)."
   (:require [jp-go-dds.skin]
             [kotoba.lang.text :as str]
@@ -159,7 +159,7 @@
      "<main>\n"
      "  <section class=\"card\">\n"
      "    <h2>Rental fleet units</h2>\n"
-     "    <p class=\"muted\">Demo snapshot — build-time-generated from <code>hgrentalops.store</code> via <code>hgrentalops.render-html</code> (<code>clojure -M:dev:render-html</code>), regenerated nightly.</p>\n"
+     "    <p class=\"muted\">Demo snapshot — build-time-generated from <code>hgrentalops.store</code> via <code>hgrentalops.render-html</code> (<code>kbb -M:dev:render-html</code>), regenerated nightly.</p>\n"
      "    <table>\n"
      "      <thead><tr><th>Unit</th><th>Name</th><th>Registration status</th><th>Last op status</th></tr></thead>\n"
      "      <tbody>\n"
