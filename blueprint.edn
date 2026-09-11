@@ -30,10 +30,10 @@
  a content-scan block on directly finalizing/overriding an
  equipment-safety-clearance decision into one check) plus a
  high-cost-threshold escalation on :coordinate-fleet-restock. 49 tests
- / 160 assertions green (clojure -M:dev:test, including
+ / 160 assertions green (kbb -M:dev:test, including
  governor_contract_test.clj's real compiled-graph commit/hard-hold/
  escalate-approve/escalate-reject coverage), clj-kondo 0 errors/0
- warnings, demo runnable end-to-end (clojure -M:dev:run). A nightly
+ warnings, demo runnable end-to-end (kbb -M:dev:run). A nightly
  docs/samples/operator-console.html regenerator
  (.github/workflows/regenerate.yml, hgrentalops.render-html) was
  already present; this fix adds the missing push/PR lint+test gate
