@@ -1,7 +1,7 @@
 (ns hgrentalops.advisor-test
   "Unit tests of `hgrentalops.advisor` proposal generation."
   (:require [kotoba.lang.text :as str]
-            [clojure.test :refer [deftest is testing]]
+            [kotoba.test :refer [deftest is testing]]
             [hgrentalops.advisor :as adv]
             [hgrentalops.governor :as gov]
             [hgrentalops.store :as store]))

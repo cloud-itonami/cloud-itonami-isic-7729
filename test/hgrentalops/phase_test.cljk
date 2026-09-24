@@ -1,6 +1,6 @@
 (ns hgrentalops.phase-test
   "Unit tests of `hgrentalops.phase` rollout logic."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [hgrentalops.phase :as phase]))
 
 (deftest phase-0-read-only
