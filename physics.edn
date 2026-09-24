@@ -1,0 +1,35 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; README "Robotics premise": robots do delivery and pickup logistics and
+;; condition inspection at delivery/return for a household-goods rental
+;; operator (ISIC 7729: furniture, appliances, electronics). Their physical
+;; work: a delivery robot wheels a tall appliance (a fridge or a washing
+;; machine) back up the loading ramp into the van at pickup, and an
+;; arm loads boxed small appliances / TVs onto the van's shelf.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-7729"
+ :cases
+ [{:id :tall-appliance-up-loading-ramp
+   :kind :transport
+   :procedure "delivery robot wheels a returned upright appliance from the customer's door up the 6 degree loading ramp into the van, braking hard if something crosses its path"
+   :params {:mass-kg 80.0 :distance-m 15.0 :v-max-mps 0.8 :a-max-mps2 0.4
+            :brake-decel-mps2 1.5 :drive-force-n 400.0 :crr 0.02 :slope-deg 6.0
+            :cog-height-m 0.35 :payload-cog-height-m 0.95 :support-half-length-m 0.25
+            :max-time-s 600.0}
+   :sweep {:param :payload-kg :values [20.0 40.0 60.0 80.0 110.0]}
+   :quantity :min-tipover-margin
+   :limit {:min 0.3 :basis "estimate: keep at least 30 % of the static restoring moment in reserve for curb bumps and a shifting load"}
+   :boundary {:lo 5.0 :hi 200.0}}
+  {:id :boxed-appliance-onto-van-shelf
+   :kind :manipulator
+   :procedure "arm lifts a boxed microwave / TV from the loading dock floor onto the delivery van's upper shelf"
+   :params {:l1-m 0.65 :l2-m 0.55 :m1-kg 8.0 :m2-kg 5.0
+            :from [0.75 -0.30] :to [0.45 0.75] :duration-s 3.0 :steps 600}
+   :sweep {:param :payload-kg :values [5.0 10.0 15.0 20.0 25.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 200.0 :basis "estimate: continuous shoulder torque of a 20 kg payload class industrial arm"}
+   :boundary {:lo 1.0 :hi 60.0}}]}
